@@ -11,16 +11,23 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#include "werr.h"
+
 #define BUFSIZE 15
 
-int werror(char*, char*);
+//int werror(char*, char*);
 int do_cp(char*, char*);
+int do_help();
 
 
 int main(int argc, char* argv[])
 {
+	HELP_CALL uhelp = do_help;
 	if (argc != 3)
-		werror("help", "");
+	{
+		whelp(uhelp);
+		exit(1);
+	}
 
 	do_cp(argv[1], argv[2]);
 	
@@ -62,25 +69,11 @@ int do_cp(char *src_file, char *dst_file)
 }
 
 
-/* 
- * 打印出错信息
- */
-int werror(char *err_str, char *ext_str)
-{
-	if (strcmp(err_str, "help") == 0)
-		whelp();
-	
-	printf("Error:%s.\n", err_str);
-	perror(ext_str);
-	
-	exit(1);
-}
-
 
 /* 
  * 打印帮助信息
  */
-int whelp()
+int do_help()
 {
 	printf("Usage:wcp src dst\n");
 	
